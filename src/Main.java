@@ -4,6 +4,9 @@ import gnu.prolog.term.Term;
 import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.database.PrologTextLoader;
 import gnu.prolog.database.PrologTextLoaderState;
+import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.Interpreter.Goal;
+import gnu.prolog.vm.PrologException;
 
 public class Main {
     public static void main(String[] args){
@@ -13,8 +16,9 @@ public class Main {
         Term[] arguments = new Term[]{cristof, robert};
         CompoundTerm regula = new CompoundTerm(functor, arguments);
 
-        /*
-         * Add the clause to the database. Steps:
+        /* ADD THE CLAUSES TO THE DATABASE
+         *
+         * Steps:
          * -create an Environment object with empty constructor
          * -create a PrologTextLoaderState object and pass the Environment
          *      object to the constructor of PrologTextLoaderState
@@ -30,5 +34,33 @@ public class Main {
         PrologTextLoaderState state = new PrologTextLoaderState(env);
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
         state.addClause(loader, regula);
+
+        /*
+         * RUN QUERYS
+         * Steps:
+         * -create Term a term object representing the goal
+         * -create an Interpreter using env.createInterpreter();
+         * -call env.runInitialization(interpreter);
+         * -call interpreter.prepareGoal(goalTerm) which returns a Goal object;
+         * -call interpreter.executeGoal(goalObject);
+         * -at each point after executeGoal you can do a dereference on a variableTerm in
+            the goal
+         * -call interpreter.stop(goalObject);
+         */
+
+        AtomTerm goalFunctor = AtomTerm.get("frate");
+        AtomTerm first = AtomTerm.get("cristof");
+        AtomTerm second = AtomTerm.get("robert");
+        Term[] goalArguments = new Term[]{first, second};
+        CompoundTerm goalTerm = new CompoundTerm(goalFunctor, goalArguments);
+        Interpreter interpreter = env.createInterpreter();
+        Goal goal = interpreter.prepareGoal(goalTerm);
+        try {
+            int rc = interpreter.execute(goal);
+            System.out.println("Rc = " + rc);
+            interpreter.stop(goal);
+        }catch(PrologException e){
+            e.printStackTrace();
+        }
     }
 }
