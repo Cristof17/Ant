@@ -23,11 +23,12 @@ public class Main {
          *      reference to replace the Term object required by the constructor
          *      which should be converted to Term to pass the compiler
          *      "ambigous"
-         * -call processClause on the PrologTextLoaderState object passing the
+         * -call addClause on the PrologTextLoaderState object passing the
                 PrologTextLoader object and the Term object to be added
          */
         Environment env = new Environment();
         PrologTextLoaderState state = new PrologTextLoaderState(env);
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
+        state.addClause(loader, regula);
     }
 }
