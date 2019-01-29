@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TestingGNUProlog" basedir="." default="compile">
+    <property name="srcdir" value="src"/>
+    <property name="dstdir" value="classes"/>
+    <property name="libsdir" value="libs"/>
+    <property name="jardir" value="libs"/>
+    <property name="jarfile" value="*.jar"/>
+    <property name="jar" value="${jardir}/${jarfile}"/>
+    <path id="libspath">
+        <fileset dir="${jardir}">
+            <include name="${jarfile}"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <mkdir dir="${dstdir}"/>
+    </target>
+    <target name="compile" depends="init">
+        <javac srcdir="${srcdir}" destdir="${dstdir}">
+            <classpath refid="libspath"/>
+        </javac>
+    </target>
+    <target name="run" depends="compile">
+        <java classname="Main" classpath="${dstdir};${jar}"/>
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${dstdir}"/>
+    </target>
+</project>
