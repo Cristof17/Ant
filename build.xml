@@ -11,7 +11,6 @@
             <include name="${jarfile}"/>
         </fileset>
     </path>
-
     <target name="init">
         <mkdir dir="${dstdir}"/>
     </target>
@@ -21,7 +20,12 @@
         </javac>
     </target>
     <target name="run" depends="compile">
-        <java classname="Main" classpath="${dstdir};${jar}"/>
+        <java classname="Main">
+            <classpath>
+                <path refid="libspath"/>
+                <path location="${dstdir}"/>
+            </classpath>
+        </java>
     </target>
     <target name="clean" depends="init">
         <delete dir="${dstdir}"/>
