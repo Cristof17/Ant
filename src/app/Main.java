@@ -9,6 +9,7 @@ import gnu.prolog.vm.Interpreter.Goal;
 import gnu.prolog.vm.PrologException;
 
 public class Main {
+    private static boolean DBG=true;
     public static void main(String[] args){
         AtomTerm cristof = AtomTerm.get("cristof");
         AtomTerm robert = AtomTerm.get("robert");
@@ -33,7 +34,13 @@ public class Main {
         Environment env = new Environment();
         PrologTextLoaderState state = new PrologTextLoaderState(env);
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
+        if(DBG){
+            System.out.println("BEFORE");
+        }
         state.addClause(loader, regula);
+        if(DBG){
+            System.out.println("AFTER");
+        }
 
         /*
          * RUN QUERYS

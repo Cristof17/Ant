@@ -217,6 +217,8 @@ public class Predicate
 		}
 		propertiesLocked = true;
 		clauses.add(clause);
+        System.out.println("Clauses size = " + clauses.size());
+        System.out.println("First clause = " +clauses.get(0).toString());
 		module.predicateUpdated(tag);
 	}
 
