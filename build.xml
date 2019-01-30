@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="TestingGNUProlog" basedir="." default="compile">
     <property name="srcdir" value="src"/>
-    <property name="dstdir" value="classes"/>
-    <property name="libsdir" value="libs"/>
+    <property name="dstdir" value="class"/>
+    <property name="appdstdir" value="app"/>
+    <property name="libsdstdir" value="libs"/>
+    <property name="libssrcdir" value="libs"/>
+    <property name="appsrcdir" value="app"/>
     <property name="jardir" value="libs"/>
-    <property name="jarfile" value="*.jar"/>
+    <property name="injarfile" value="*.jar"/>
+    <property name="outjarfile" value="gnuprolog.jar"/>
     <property name="jar" value="${jardir}/${jarfile}"/>
     <path id="libspath">
         <fileset dir="${jardir}">
-            <include name="${jarfile}"/>
+            <include name="${injarfile}"/>
         </fileset>
     </path>
     <target name="init">
         <mkdir dir="${dstdir}"/>
+        <mkdir dir="${dstdir}/${libsdstdir}"/>
+        <mkdir dir="${dstdir}/${appdstdir}"/>
     </target>
-    <target name="compile" depends="init">
-        <javac srcdir="${srcdir}" destdir="${dstdir}">
+    <target name="jar" depends="init">
+        <javac srcdir="${srcdir}/${libssrcdir}" destdir="${dstdir}/${libsdstdir}"/>
+    </target>
+    <target name="gnuprolog" depends="jar">
+        <mkdir dir="${jardir}"/>
+        <jar destfile="${jardir}/${outjarfile}" basedir="${dstdir}/${libsdstdir}"/>
+    </target>
+    <target name="compile" depends="gnuprolog">
+        <javac srcdir="${srcdir}/${appsrcdir}" destdir="${dstdir}/${appdstdir}">
             <classpath refid="libspath"/>
         </javac>
     </target>
@@ -23,11 +36,15 @@
         <java classname="Main">
             <classpath>
                 <path refid="libspath"/>
-                <path location="${dstdir}"/>
+                <path location="${dstdir}/${appdstdir}"/>
             </classpath>
         </java>
     </target>
-    <target name="clean" depends="init">
+    <target name="clean">
+        <delete dir="${outjarfile}"/>
+        <delete dir="${jardir}"/>
+        <delete dir="${dstdir}/${libsdstdir}"/>
+        <delete dir="${dstdir}/${appdstdir}"/>
         <delete dir="${dstdir}"/>
     </target>
 </project>

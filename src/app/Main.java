@@ -47,7 +47,6 @@ public class Main {
             the goal
          * -call interpreter.stop(goalObject);
          */
-
         AtomTerm goalFunctor = AtomTerm.get("frate");
         AtomTerm first = AtomTerm.get("cristof");
         AtomTerm second = AtomTerm.get("robert");
