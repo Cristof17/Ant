@@ -7,6 +7,7 @@ import gnu.prolog.database.PrologTextLoaderState;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.Interpreter.Goal;
 import gnu.prolog.vm.PrologException;
+import gnu.prolog.term.VariableTerm;
 
 public class Main {
     private static boolean DBG=true;
@@ -56,15 +57,16 @@ public class Main {
          */
         AtomTerm goalFunctor = AtomTerm.get("frate");
         AtomTerm first = AtomTerm.get("cristof");
-        AtomTerm second = AtomTerm.get("robert");
-        Term[] goalArguments = new Term[]{first, second};
+        VariableTerm variable = new VariableTerm("X");
+        Term[] goalArguments = new Term[]{first, variable};
         CompoundTerm goalTerm = new CompoundTerm(goalFunctor, goalArguments);
         Interpreter interpreter = env.createInterpreter();
         Goal goal = interpreter.prepareGoal(goalTerm);
         try {
             int rc = interpreter.execute(goal);
             System.out.println("Rc = " + rc);
-            interpreter.stop(goal);
+            System.out.println("Variable = " + variable.dereference().toString());
+            //interpreter.stop(goal);
         }catch(PrologException e){
             e.printStackTrace();
         }
