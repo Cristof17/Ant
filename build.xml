@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="TestingGNUProlog" basedir="." default="compile">
+<project name="TestingGNUProlog" basedir="/home/robert/Documents/cristof/prolog/java" default="compile">
     <property name="srcdir" value="src"/>
     <property name="dstdir" value="class"/>
     <property name="appdstdir" value="app"/>

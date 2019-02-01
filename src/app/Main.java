@@ -21,8 +21,8 @@ public class Main {
          *
          * Steps:
          * -create an Environment object with empty constructor
-         * -create a PrologTextLoaderState object and pass the Environment
-         *      object to the constructor of PrologTextLoaderState
+         * -get a PrologTextLoaderState object from the environment using
+         *      getPrologTextLoaderState();
          * -create a PrologTextLoader object and pass the PrologTextLoaderState
          *      object to the constructor of PrologTextLoader and a null
          *      reference to replace the Term object required by the constructor
@@ -32,7 +32,7 @@ public class Main {
                 PrologTextLoader object and the Term object to be added
          */
         Environment env = new Environment();
-        PrologTextLoaderState state = new PrologTextLoaderState(env);
+        PrologTextLoaderState state = env.getPrologTextLoaderState();
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
         if(DBG){
             System.out.println("BEFORE");
