@@ -14,9 +14,15 @@ public class Main {
     public static void main(String[] args){
         AtomTerm cristof = AtomTerm.get("cristof");
         AtomTerm robert = AtomTerm.get("robert");
-        AtomTerm functor = AtomTerm.get("frate"); 
+        AtomTerm frate = AtomTerm.get("frate"); 
         Term[] arguments = new Term[]{cristof, robert};
-        CompoundTerm regula = new CompoundTerm(functor, arguments);
+        CompoundTerm regula = new CompoundTerm(frate, arguments);
+
+        AtomTerm frate2 = AtomTerm.get("frate");
+        AtomTerm cristof2 = AtomTerm.get("cristof");
+        AtomTerm cric = AtomTerm.get("cric");
+        Term[] arguments3 = new Term[]{cristof2, cric};
+        CompoundTerm regula3 = new CompoundTerm(frate2, arguments3);
 
         /* ADD THE CLAUSES TO THE DATABASE
          *
@@ -35,14 +41,8 @@ public class Main {
         Environment env = new Environment();
         PrologTextLoaderState state = env.getPrologTextLoaderState();
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
-        if(DBG){
-            System.out.println("BEFORE");
-        }
         state.addClause(loader, regula);
-        if(DBG){
-            System.out.println("AFTER");
-        }
-
+        state.addClause(loader, regula3);
         /*
          * RUN QUERYS
          * Steps:
@@ -63,10 +63,14 @@ public class Main {
         Interpreter interpreter = env.createInterpreter();
         Goal goal = interpreter.prepareGoal(goalTerm);
         try {
-            int rc = interpreter.execute(goal);
-            System.out.println("Rc = " + rc);
-            System.out.println("Variable = " + variable.dereference().toString());
-            //interpreter.stop(goal);
+            int rc = 0;
+            do{
+                System.out.println("[MAIN]: Execut in main");
+                rc = interpreter.execute(goal);
+                System.out.println("rc = " + rc + " variable = " + variable.dereference().toString());
+                if (rc == 1)
+                    break;
+            }while(rc > -1);
         }catch(PrologException e){
             e.printStackTrace();
         }

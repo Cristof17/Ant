@@ -82,7 +82,6 @@ public final class Interpreter implements HasEnvironment
 		}
 		catch (PrologException e)
 		{
-			System.err.println("Could not get an output stream:");
 			e.printStackTrace();
 		}
 		tracer = new Tracer(outstream);

@@ -37,12 +37,6 @@ import java.util.Set;
  */
 public class Module
 {
-    static int numModules = 0;
-    public Module(){
-        numModules++;
-        System.out.println("Nu modules = "+ numModules);
-    }
-
 	/** map from tag to predicates */
 	protected Map<CompoundTermTag, Predicate> tag2predicate = new HashMap<CompoundTermTag, Predicate>();
 

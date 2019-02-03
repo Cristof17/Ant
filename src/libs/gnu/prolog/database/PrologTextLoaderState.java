@@ -279,6 +279,7 @@ public class PrologTextLoaderState implements PrologTextLoaderListener, HasEnvir
 			logError(loader, "predicate head is not a callable term.");
 			return;
 		}
+
 		if (currentPredicate == null || headTag != currentPredicate.getTag())
 		{
 			currentPredicate = null;
@@ -316,6 +317,7 @@ public class PrologTextLoaderState implements PrologTextLoaderListener, HasEnvir
 		{
 			logError(loader, ex.getMessage());
 		}
+
 	}
 
 	public void defineExternal(PrologTextLoader loader, CompoundTerm pi, String javaClassName, Predicate.TYPE type)
