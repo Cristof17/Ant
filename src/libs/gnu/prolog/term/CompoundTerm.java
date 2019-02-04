@@ -323,20 +323,16 @@ public class CompoundTerm extends Term implements Comparable<Term>
                 for (i = 0; i < term.tag.arity; ++i){
                     if (!term.args[i].equals(this.args[i])){
                         int rc = term.args[i].toString().compareTo(this.args[i].toString());
-                        System.out.println("Compar " + term.args[i].toString() + " cu " + this.args[i].toString() + " rc = " + rc);
                         return rc;
                     }
                 }
             }else{
-                System.out.println("Aritati nu sunt egale");
                 if (term.tag.arity < this.tag.arity)
                     return -1;
                 else
                     return 1;
             }
-        }else{
-            System.out.println("Tag-uri inegale");
         }
-        return 0;
+        return term.tag.compareTo(this.tag);
     }
 }

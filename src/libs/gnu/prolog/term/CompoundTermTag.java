@@ -256,7 +256,6 @@ final public class CompoundTermTag implements java.io.Serializable, Comparable<C
             return 1;
         if (this.functor.equals(tag.functor))
             return 0;
-        System.out.println("Functori nu sunt egali" + " am " + this.functor + " am primit " + tag.functor);
         return 1;
     }
 }
