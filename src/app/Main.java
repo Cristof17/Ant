@@ -59,7 +59,6 @@ public class Main {
         //Predicate.prepareClause(clause) which creates a new clause based on our initial
         //clause. What we can do is iterate throught all the clauses returned by
         //getClauses and see which one equals our clause so that we can remove it
-        /*
         gnu.prolog.database.Predicate predicate = state.getModule().getDefinedPredicate(regula.tag);
         java.util.List<Term> clauses = predicate.getClauses();
         java.util.Iterator<Term> it = clauses.iterator();
@@ -78,9 +77,11 @@ public class Main {
                 }
             }
         }
-        */
 
         //update de facut metoda speciala pentru el
+        //to update a clause at the beginning we need to 
+        //get the clause from the clauses list returned by the predicate
+        //then update the specific item, either functor or arguments by using atomterm.get()
         gnu.prolog.database.Predicate predicate2 = state.getModule().getDefinedPredicate(regula.tag);
         java.util.List<Term> clauses2 = predicate2.getClauses();
         java.util.Iterator<Term> it2 = clauses2.iterator();
@@ -96,7 +97,6 @@ public class Main {
                     realClause.args[1] = AtomTerm.get("masina");
                     if (realClause.compareTo(regula) == 0){
                         //o iau din lista de clause a predicatului si o sterg
-                        predicate2.removeClause(clause);
                     }
                 }
             }
