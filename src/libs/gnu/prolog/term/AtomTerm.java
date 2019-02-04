@@ -27,7 +27,7 @@ import java.util.WeakHashMap;
  * @author Constantin Plotnikov
  * @version 0.0.1
  */
-public class AtomTerm extends AtomicTerm
+public class AtomTerm extends AtomicTerm implements Comparable<Term>
 {
 	private static final long serialVersionUID = -7013961090908432585L;
 
@@ -159,4 +159,15 @@ public class AtomTerm extends AtomicTerm
 		}
 		return true;
 	}
+
+    /**
+     * Added by cristof
+     */ 
+    public int compareTo(Term term){
+        if (term instanceof AtomTerm){
+            AtomTerm atomTerm = (AtomTerm)term;
+            return this.value.compareTo(atomTerm.value);
+        }
+        return ((Term)this).compareTo(term);
+    }
 }

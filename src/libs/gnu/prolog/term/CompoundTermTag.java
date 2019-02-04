@@ -30,7 +30,7 @@ import java.util.WeakHashMap;
  * @author Constatine Plotinikov
  * @version 0.0.1
  */
-final public class CompoundTermTag implements java.io.Serializable
+final public class CompoundTermTag implements java.io.Serializable, Comparable<CompoundTermTag>
 {
 	private static final long serialVersionUID = -208937166475321367L;
 
@@ -245,4 +245,18 @@ final public class CompoundTermTag implements java.io.Serializable
 		}
 		return true;
 	}
+
+    /**
+     * Added by cristof
+     */
+    public int compareTo(CompoundTermTag tag){
+        if (tag.arity < this.arity)
+            return -1;
+        if (tag.arity > this.arity)
+            return 1;
+        if (this.functor.equals(tag.functor))
+            return 0;
+        System.out.println("Functori nu sunt egali" + " am " + this.functor + " am primit " + tag.functor);
+        return 1;
+    }
 }

@@ -259,6 +259,23 @@ public class Predicate
 		module.predicateUpdated(tag);
 	}
 
+
+    /**
+     * Update clause
+     */ 
+    public synchronized int updateClause(Term clause){
+        if (clause == null)
+            throw new NullPointerException("Clause cannot be null");
+        int index = clauses.indexOf(clause);
+        if (index == -1)
+            return -1;
+        Term removedClause = clauses.remove(index);
+        if (removedClause == null)
+            return -1;
+        clauses.add(index, clause);
+        return 0;
+    }
+
 	/**
 	 * Check if properties of predicate could be changed at this moment
 	 * 

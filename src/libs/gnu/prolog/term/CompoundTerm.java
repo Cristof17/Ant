@@ -21,6 +21,7 @@ import gnu.prolog.vm.TermConstants;
 
 import java.util.Collection;
 import java.util.List;
+import java.lang.Comparable;
 
 /**
  * Compound terms are the basic method for combining terms. In
@@ -30,7 +31,7 @@ import java.util.List;
  * @author Constantine Plotnilkov
  * @version 0.0.1
  */
-public class CompoundTerm extends Term
+public class CompoundTerm extends Term implements Comparable<Term>
 {
 	private static final long serialVersionUID = -8207470525318790957L;
 
@@ -311,4 +312,31 @@ public class CompoundTerm extends Term
 	{
 		return COMPOUND;
 	}
+
+    /**
+     * Added by Cristof
+     */
+    public int compareTo(CompoundTerm term){
+        if (term.tag.compareTo(this.tag) == 0){
+            if (term.tag.arity == this.tag.arity){
+                int i = 0;
+                for (i = 0; i < term.tag.arity; ++i){
+                    if (!term.args[i].equals(this.args[i])){
+                        int rc = term.args[i].toString().compareTo(this.args[i].toString());
+                        System.out.println("Compar " + term.args[i].toString() + " cu " + this.args[i].toString() + " rc = " + rc);
+                        return rc;
+                    }
+                }
+            }else{
+                System.out.println("Aritati nu sunt egale");
+                if (term.tag.arity < this.tag.arity)
+                    return -1;
+                else
+                    return 1;
+            }
+        }else{
+            System.out.println("Tag-uri inegale");
+        }
+        return 0;
+    }
 }

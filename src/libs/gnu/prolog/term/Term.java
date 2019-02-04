@@ -25,7 +25,7 @@ import gnu.prolog.io.TermWriter;
  * @author Constantine Plotniokov
  * @version 0.0.1
  */
-public abstract class Term implements java.io.Serializable, Cloneable
+public abstract class Term implements java.io.Serializable, Cloneable, Comparable<Term>
 {
 	private static final long serialVersionUID = -5388107925239494079L;
 
@@ -88,4 +88,13 @@ public abstract class Term implements java.io.Serializable, Cloneable
 	{
 		return TermWriter.toString(this);
 	}
+    
+    /**
+     * Added by cristof
+     */ 
+    public int compareTo(Term term){
+        if (this.equals(term))
+            return 0;
+        return 1;
+    }
 }
