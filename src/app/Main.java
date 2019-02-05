@@ -71,7 +71,6 @@ public class Main {
         CompoundTerm bodyPredicate1 = new CompoundTerm(bodyFunctor1, bodyPredicateArgs1);
         Term bodyPredicateArgs2[] = new Term[]{gigel};
         CompoundTerm bodyPredicate2 = new CompoundTerm(bodyFunctor2, bodyPredicateArgs2);
-        
 
         /* ADD THE CLAUSES TO THE DATABASE
          *
@@ -171,6 +170,22 @@ public class Main {
         }catch(PrologException e){
             e.printStackTrace();
         }
+
+
+        //query the simple rule
+        AtomTerm simpleRuleGoalFunctor = AtomTerm.get("iubeste");
+        AtomTerm marcel = AtomTerm.get("marcel");
+        AtomTerm gigelGoal = AtomTerm.get("gigel");
+        Term simpleRuleGoalTermArgs[] = new Term[]{gigelGoal};
+        CompoundTerm simpleRuleGoalTerm = new CompoundTerm(simpleRuleGoalFunctor, simpleRuleGoalTermArgs);
+        Goal simpleRuleGoal = interpreter.prepareGoal(simpleRuleGoalTerm);
+        try{
+            int rc = interpreter.execute(simpleRuleGoal);
+            System.out.println("simpleRule rc = " + rc);
+        }catch(PrologException e){
+            e.printStackTrace();
+        }
+        
     }
 
    static void remove(PrologTextLoaderState state, CompoundTerm regula){
