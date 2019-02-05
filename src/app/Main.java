@@ -9,18 +9,19 @@ import gnu.prolog.vm.Interpreter.Goal;
 import gnu.prolog.vm.PrologException;
 import gnu.prolog.term.VariableTerm;
 import gnu.prolog.term.CompoundTerm;
+import gnu.prolog.vm.TermConstants;
 
 public class Main {
     private static boolean DBG=true;
     public static void main(String[] args){
-        //rule
+        //predicate
         AtomTerm cristof = AtomTerm.get("cristof");
         AtomTerm robert = AtomTerm.get("robert");
         AtomTerm frate = AtomTerm.get("frate"); 
         Term[] arguments = new Term[]{cristof, robert};
         CompoundTerm regula = new CompoundTerm(frate, arguments);
 
-        //rule
+        //predicate
         AtomTerm frate2 = AtomTerm.get("frate");
         AtomTerm cristof2 = AtomTerm.get("cristof");
         AtomTerm cric = AtomTerm.get("cric");
@@ -35,7 +36,7 @@ public class Main {
         Term[] listArgs = new Term[]{arg1, arg2, arg3};
         CompoundTerm list = new CompoundTerm(listFunctor, listArgs);
 
-        //rule with list
+        //predicate with list
         AtomTerm casa = AtomTerm.get("casa");
         AtomTerm numarCamere = AtomTerm.get("3");
         AtomTerm listFunctor2 = AtomTerm.get(".");
@@ -46,6 +47,30 @@ public class Main {
         CompoundTerm list2 = new CompoundTerm(listFunctor2, ruleListArgs);
         Term[] ruleArgs = new Term[]{numarCamere, list2};
         CompoundTerm ruleWithList = new CompoundTerm(casa, ruleArgs);
+
+        //add a simple rule
+        //create the rule
+        AtomTerm headFunctor = AtomTerm.get("iubeste");
+        AtomTerm gigel = AtomTerm.get("gigel");
+        VariableTerm headVariable = new VariableTerm("X");
+        Term[] headArgs = new Term[]{headVariable};
+        CompoundTerm head = new CompoundTerm(headFunctor, headArgs);
+        AtomTerm bodyFunctor1 = AtomTerm.get("frumoasa");
+        Term bodyTerms1[] = new Term[]{headVariable};
+        CompoundTerm body1 = new CompoundTerm(bodyFunctor1, bodyTerms1);
+        AtomTerm bodyFunctor2 = AtomTerm.get("draguta");
+        Term bodyTerms2[] = new Term[]{headVariable};
+        CompoundTerm body2 = new CompoundTerm(bodyFunctor1, bodyTerms1);
+        Term bodyTerms[] = new Term[]{body1, body2};
+        CompoundTerm body = new CompoundTerm(TermConstants.conjunctionTag, bodyTerms);
+        Term[] simpleRuleArgs = new Term[]{head, body};
+        CompoundTerm simpleRule = new CompoundTerm(TermConstants.clauseTag, simpleRuleArgs);
+
+        //add basic predicates
+        Term bodyPredicateArgs1[] = new Term[]{gigel};
+        CompoundTerm bodyPredicate1 = new CompoundTerm(bodyFunctor1, bodyPredicateArgs1);
+        Term bodyPredicateArgs2[] = new Term[]{gigel};
+        CompoundTerm bodyPredicate2 = new CompoundTerm(bodyFunctor2, bodyPredicateArgs2);
         
 
         /* ADD THE CLAUSES TO THE DATABASE
@@ -70,6 +95,11 @@ public class Main {
         state.addClause(loader, regula3);
         state.addClause(loader, list);
         state.addClause(loader, ruleWithList);
+        //simple rule add
+        //add the preidcates first and then add the rule
+        state.addClause(loader, bodyPredicate1);
+        state.addClause(loader, bodyPredicate2);
+        state.addClause(loader, simpleRule);
         //get
         //call state.getModule().getDefinedPredicate(tag) where tag is a CompundTerm.tag object
         //the call returns a predicate which contains the tag. If the predicate is different than
@@ -183,6 +213,7 @@ public class Main {
             Term clause = it2.next();
             if (clause instanceof CompoundTerm){
                 CompoundTerm compoundClause = (CompoundTerm)clause;
+                System.out.println(compoundClause);
                 Term firstArg = compoundClause.args[0];//the tag is :-
                 if (firstArg instanceof CompoundTerm){
                     CompoundTerm realClause = (CompoundTerm)firstArg;
