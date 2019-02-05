@@ -176,12 +176,13 @@ public class Main {
         AtomTerm simpleRuleGoalFunctor = AtomTerm.get("iubeste");
         AtomTerm marcel = AtomTerm.get("marcel");
         AtomTerm gigelGoal = AtomTerm.get("gigel");
-        Term simpleRuleGoalTermArgs[] = new Term[]{gigelGoal};
+        VariableTerm simpleRuleVariable = new VariableTerm("Y");
+        Term simpleRuleGoalTermArgs[] = new Term[]{simpleRuleVariable};
         CompoundTerm simpleRuleGoalTerm = new CompoundTerm(simpleRuleGoalFunctor, simpleRuleGoalTermArgs);
         Goal simpleRuleGoal = interpreter.prepareGoal(simpleRuleGoalTerm);
         try{
             int rc = interpreter.execute(simpleRuleGoal);
-            System.out.println("simpleRule rc = " + rc);
+            System.out.println("simpleRule rc = " + rc + " variable = " + simpleRuleVariable.dereference().toString());
         }catch(PrologException e){
             e.printStackTrace();
         }
