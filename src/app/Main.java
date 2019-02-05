@@ -69,6 +69,7 @@ public class Main {
         state.addClause(loader, regula);
         state.addClause(loader, regula3);
         state.addClause(loader, list);
+        state.addClause(loader, ruleWithList);
         //get
         //call state.getModule().getDefinedPredicate(tag) where tag is a CompundTerm.tag object
         //the call returns a predicate which contains the tag. If the predicate is different than
@@ -124,6 +125,19 @@ public class Main {
         try {
             int rc = interpreter.execute(listGoal);
             System.out.println("rc = " + rc + " variable = " + listVariable.dereference().toString()); 
+        }catch(PrologException e){
+            e.printStackTrace();
+        }
+
+        AtomTerm ruleWithListGoalFunctor = AtomTerm.get("casa");
+        AtomTerm ruleWithListGoalArg1 = AtomTerm.get("3");
+        VariableTerm ruleWithListGoalVariableTerm = new VariableTerm("Y");
+        Term[] ruleWithListGoalTermArgs = new Term[]{ruleWithListGoalArg1, ruleWithListGoalVariableTerm};
+        CompoundTerm ruleWithListGoalTerm = new CompoundTerm(ruleWithListGoalFunctor, ruleWithListGoalTermArgs);
+        Goal ruleWithListGoal = interpreter.prepareGoal(ruleWithListGoalTerm);
+        try {
+            int rc = interpreter.execute(ruleWithListGoal);
+            System.out.println("rc = " + rc + " variable = " + ruleWithListGoalVariableTerm.dereference().toString());
         }catch(PrologException e){
             e.printStackTrace();
         }
