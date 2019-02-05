@@ -13,17 +13,40 @@ import gnu.prolog.term.CompoundTerm;
 public class Main {
     private static boolean DBG=true;
     public static void main(String[] args){
+        //rule
         AtomTerm cristof = AtomTerm.get("cristof");
         AtomTerm robert = AtomTerm.get("robert");
         AtomTerm frate = AtomTerm.get("frate"); 
         Term[] arguments = new Term[]{cristof, robert};
         CompoundTerm regula = new CompoundTerm(frate, arguments);
 
+        //rule
         AtomTerm frate2 = AtomTerm.get("frate");
         AtomTerm cristof2 = AtomTerm.get("cristof");
         AtomTerm cric = AtomTerm.get("cric");
         Term[] arguments3 = new Term[]{cristof2, cric};
         CompoundTerm regula3 = new CompoundTerm(frate2, arguments3);
+
+        //list
+        AtomTerm listFunctor = AtomTerm.get(".");
+        AtomTerm arg1 = AtomTerm.get("1");
+        AtomTerm arg2 = AtomTerm.get("2");
+        AtomTerm arg3 = AtomTerm.get("3");
+        Term[] listArgs = new Term[]{arg1, arg2, arg3};
+        CompoundTerm list = new CompoundTerm(listFunctor, listArgs);
+
+        //rule with list
+        AtomTerm casa = AtomTerm.get("casa");
+        AtomTerm numarCamere = AtomTerm.get("3");
+        AtomTerm listFunctor2 = AtomTerm.get(".");
+        AtomTerm ruleWithListArg1 = AtomTerm.get("camera1");
+        AtomTerm ruleWithListArg2 = AtomTerm.get("camera2");
+        AtomTerm ruleWithListArg3 = AtomTerm.get("camera3");
+        Term ruleListArgs[] = new Term[]{ruleWithListArg1, ruleWithListArg2, ruleWithListArg3};
+        CompoundTerm list2 = new CompoundTerm(listFunctor2, ruleListArgs);
+        Term[] ruleArgs = new Term[]{numarCamere, list2};
+        CompoundTerm ruleWithList = new CompoundTerm(casa, ruleArgs);
+        
 
         /* ADD THE CLAUSES TO THE DATABASE
          *
@@ -45,6 +68,7 @@ public class Main {
         //add
         state.addClause(loader, regula);
         state.addClause(loader, regula3);
+        state.addClause(loader, list);
         //get
         //call state.getModule().getDefinedPredicate(tag) where tag is a CompundTerm.tag object
         //the call returns a predicate which contains the tag. If the predicate is different than
@@ -54,7 +78,6 @@ public class Main {
 
         //remove(state, regula);
         update(state, regula3);
-
         
         /*
          * RUN QUERYS
@@ -84,6 +107,23 @@ public class Main {
                 if (rc == 1)
                     break;
             }while(rc > -1);
+        }catch(PrologException e){
+            e.printStackTrace();
+        }
+
+
+        //get the parameter of a list in prolog
+        AtomTerm listGoalFunctor = AtomTerm.get(".");
+        AtomTerm listGoalArg1 = AtomTerm.get("1");
+        AtomTerm listGoalArg2 = AtomTerm.get("2");
+        AtomTerm listGoalArg3 = AtomTerm.get("3");
+        VariableTerm listVariable = new VariableTerm("X");
+        Term listGoalArgs[] = new Term[]{listGoalArg1, listVariable, listGoalArg3};
+        Term listGoalTerm = new CompoundTerm(listGoalFunctor, listGoalArgs);
+        Goal listGoal = interpreter.prepareGoal(listGoalTerm);
+        try {
+            int rc = interpreter.execute(listGoal);
+            System.out.println("rc = " + rc + " variable = " + listVariable.dereference().toString()); 
         }catch(PrologException e){
             e.printStackTrace();
         }
