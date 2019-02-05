@@ -52,55 +52,9 @@ public class Main {
         //by calling state.geModule().getClauses() which returns a List<Term> where the clauses
         //that contain the predicate reside
 
-        //remove
-        //cannot remove simply by calling removeClause with the clause defined by us
-        //because the clause that we are passing to remove is not the same object as
-        //the clause which has been introduced because in the source code there is a call
-        //Predicate.prepareClause(clause) which creates a new clause based on our initial
-        //clause. What we can do is iterate throught all the clauses returned by
-        //getClauses and see which one equals our clause so that we can remove it
-        gnu.prolog.database.Predicate predicate = state.getModule().getDefinedPredicate(regula.tag);
-        java.util.List<Term> clauses = predicate.getClauses();
-        java.util.Iterator<Term> it = clauses.iterator();
-        while (it.hasNext()){
-            Term clause = it.next();
-            if (clause instanceof CompoundTerm){
-                CompoundTerm compoundClause = (CompoundTerm)clause;
-                Term firstArg = compoundClause.args[0];//the tag is :-
-                if (firstArg instanceof CompoundTerm){
-                    CompoundTerm realClause = (CompoundTerm)firstArg;
-                    System.out.println(realClause);
-                    if (realClause.compareTo(regula) == 0){
-                        //o iau din lista de clause a predicatului si o sterg
-                        predicate.removeClause(clause);
-                    }
-                }
-            }
-        }
+        //remove(state, regula);
+        update(state, regula3);
 
-        //update de facut metoda speciala pentru el
-        //to update a clause at the beginning we need to 
-        //get the clause from the clauses list returned by the predicate
-        //then update the specific item, either functor or arguments by using atomterm.get()
-        gnu.prolog.database.Predicate predicate2 = state.getModule().getDefinedPredicate(regula.tag);
-        java.util.List<Term> clauses2 = predicate2.getClauses();
-        java.util.Iterator<Term> it2 = clauses2.iterator();
-        while (it2.hasNext()){
-            Term clause = it2.next();
-            if (clause instanceof CompoundTerm){
-                CompoundTerm compoundClause = (CompoundTerm)clause;
-                Term firstArg = compoundClause.args[0];//the tag is :-
-                if (firstArg instanceof CompoundTerm){
-                    CompoundTerm realClause = (CompoundTerm)firstArg;
-                    System.out.println(realClause);
-                    AtomTerm atomTerm = (AtomTerm)realClause.args[1];
-                    realClause.args[1] = AtomTerm.get("masina");
-                    if (realClause.compareTo(regula) == 0){
-                        //o iau din lista de clause a predicatului si o sterg
-                    }
-                }
-            }
-        }
         
         /*
          * RUN QUERYS
@@ -132,6 +86,60 @@ public class Main {
             }while(rc > -1);
         }catch(PrologException e){
             e.printStackTrace();
+        }
+    }
+
+   static void remove(PrologTextLoaderState state, CompoundTerm regula){
+        //remove
+        //cannot remove simply by calling removeClause with the clause defined by us
+        //because the clause that we are passing to remove is not the same object as
+        //the clause which has been introduced because in the source code there is a call
+        //Predicate.prepareClause(clause) which creates a new clause based on our initial
+        //clause. What we can do is iterate throught all the clauses returned by
+        //getClauses and see which one equals our clause so that we can remove it
+        gnu.prolog.database.Predicate predicate = state.getModule().getDefinedPredicate(regula.tag);
+        java.util.List<Term> clauses = predicate.getClauses();
+        java.util.Iterator<Term> it = clauses.iterator();
+        while (it.hasNext()){
+            Term clause = it.next();
+            if (clause instanceof CompoundTerm){
+                CompoundTerm compoundClause = (CompoundTerm)clause;
+                Term firstArg = compoundClause.args[0];//the tag is :-
+                if (firstArg instanceof CompoundTerm){
+                    CompoundTerm realClause = (CompoundTerm)firstArg;
+                    System.out.println(realClause);
+                    if (realClause.compareTo(regula) == 0){
+                        //o iau din lista de clause a predicatului si o sterg
+                        predicate.removeClause(clause);
+                    }
+                }
+            }
+        }
+    }
+
+    static void update(PrologTextLoaderState state, CompoundTerm regula){
+        //update de facut metoda speciala pentru el
+        //to update a clause at the beginning we need to 
+        //get the clause from the clauses list returned by the predicate
+        //then update the specific item, either functor or arguments by using atomterm.get()
+        gnu.prolog.database.Predicate predicate2 = state.getModule().getDefinedPredicate(regula.tag);
+        java.util.List<Term> clauses2 = predicate2.getClauses();
+        java.util.Iterator<Term> it2 = clauses2.iterator();
+        while (it2.hasNext()){
+            Term clause = it2.next();
+            if (clause instanceof CompoundTerm){
+                CompoundTerm compoundClause = (CompoundTerm)clause;
+                Term firstArg = compoundClause.args[0];//the tag is :-
+                if (firstArg instanceof CompoundTerm){
+                    CompoundTerm realClause = (CompoundTerm)firstArg;
+                    System.out.println(realClause);
+                    AtomTerm atomTerm = (AtomTerm)realClause.args[1];
+                    if (realClause.compareTo(regula) == 0){
+                        //o iau din lista de clause a predicatului si o sterg
+                        realClause.args[1] = AtomTerm.get("geam");
+                    }
+                }
+            }
         }
     }
 }
