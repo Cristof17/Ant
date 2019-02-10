@@ -101,6 +101,7 @@ public class Main {
         CompoundTerm headTailClauseTerm = new CompoundTerm(TermConstants.conjunctionTag, headTailClauseTermArgs);
         Term[] headTailClauseArgs = new Term[]{headTailTerm, headTailClauseTerm};
         CompoundTerm headTailClause = new CompoundTerm (TermConstants.clauseTag, headTailClauseArgs);
+        System.out.println("headTailClause = " + headTailClause.toString());
 
         /* ADD THE CLAUSES TO THE DATABASE
          *
