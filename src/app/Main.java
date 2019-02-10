@@ -72,6 +72,36 @@ public class Main {
         Term bodyPredicateArgs2[] = new Term[]{gigel};
         CompoundTerm bodyPredicate2 = new CompoundTerm(bodyFunctor2, bodyPredicateArgs2);
 
+
+        //add a simple list for head and tail query
+        //exist(usa);
+        //exist(usa2);
+        //predicate([H|T]) :- exist(H), exist(T).
+        AtomTerm predicate = AtomTerm.get("predicate");
+        VariableTerm headTerm = new VariableTerm("H");
+        VariableTerm tailTerm = new VariableTerm("T");
+        AtomTerm headTailElement = AtomTerm.get(headTerm.toString()+"|"+tailTerm.toString());
+        Term[] headTailArgs = new Term[]{headTailElement};
+        AtomTerm headTailFunctor = AtomTerm.get("."); 
+        CompoundTerm headTailList = new CompoundTerm(headTailFunctor, headTailArgs);
+        Term[] headTailPredicateArgs = new Term[]{headTailList};
+        CompoundTerm headTailTerm = new CompoundTerm(predicate, headTailPredicateArgs);
+        AtomTerm existTerm = AtomTerm.get("exist");
+        AtomTerm usa = AtomTerm.get("usa");
+        AtomTerm usa2 = AtomTerm.get("usa2");
+        Term[] usaArgs = new Term[]{usa};
+        Term[] usa2Args = new Term[]{usa2};
+        CompoundTerm usaTerm = new CompoundTerm(existTerm, usaArgs);
+        CompoundTerm usa2Term = new CompoundTerm(existTerm, usa2Args);
+        Term[] ruleFirstTermArgs = new Term[]{headTerm};
+        CompoundTerm ruleFirstTerm = new CompoundTerm(existTerm, ruleFirstTermArgs);
+        Term[] ruleSecondTermArgs = new Term[]{tailTerm};
+        CompoundTerm ruleSecondTerm = new CompoundTerm(existTerm, ruleSecondTermArgs);
+        Term[] headTailClauseTermArgs = new Term[]{ruleFirstTerm, ruleSecondTerm};
+        CompoundTerm headTailClauseTerm = new CompoundTerm(TermConstants.conjunctionTag, headTailClauseTermArgs);
+        Term[] headTailClauseArgs = new Term[]{headTailTerm, headTailClauseTerm};
+        CompoundTerm headTailClause = new CompoundTerm (TermConstants.clauseTag, headTailClauseArgs);
+
         /* ADD THE CLAUSES TO THE DATABASE
          *
          * Steps:
@@ -99,6 +129,10 @@ public class Main {
         state.addClause(loader, bodyPredicate1);
         state.addClause(loader, bodyPredicate2);
         state.addClause(loader, simpleRule);
+        //head tail term rule
+        state.addClause(loader, usaTerm);
+        state.addClause(loader, usa2Term);
+        state.addClause(loader, headTailClause);
         //get
         //call state.getModule().getDefinedPredicate(tag) where tag is a CompundTerm.tag object
         //the call returns a predicate which contains the tag. If the predicate is different than
@@ -183,6 +217,23 @@ public class Main {
         try{
             int rc = interpreter.execute(simpleRuleGoal);
             System.out.println("simpleRule rc = " + rc + " variable = " + simpleRuleVariable.dereference().toString());
+        }catch(PrologException e){
+            e.printStackTrace();
+        }
+
+        //query head tail rule
+        AtomTerm headTailGoalTermPredicate = AtomTerm.get("predicate");
+        VariableTerm headTailGoalArgTermListArg1 = new VariableTerm("X");
+        AtomTerm headTailGoalArgTermListArg2 = AtomTerm.get("cricric");
+        Term[] headTailGoalArgTermListArgs = new Term[]{headTailGoalArgTermListArg1, headTailGoalArgTermListArg2};
+        AtomTerm headTailGoalArgTermListFunctor = AtomTerm.get(".");
+        CompoundTerm headTailGoalArgTerm = new CompoundTerm(headTailGoalArgTermListFunctor, headTailGoalArgTermListArgs);
+        Term[] headTailGoalTermArgs = new Term[]{headTailGoalArgTerm};
+        CompoundTerm headTailGoalTerm = new CompoundTerm(headTailGoalTermPredicate, headTailGoalTermArgs);
+        Goal headTailGoal = interpreter.prepareGoal(headTailGoalTerm);
+        try {
+            int rc = interpreter.execute(headTailGoal);
+            System.out.println("rc = " + rc);
         }catch(PrologException e){
             e.printStackTrace();
         }
