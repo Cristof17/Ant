@@ -80,12 +80,13 @@ public class Main {
         AtomTerm predicate = AtomTerm.get("predicate");
         VariableTerm headTerm = new VariableTerm("H");
         VariableTerm tailTerm = new VariableTerm("T");
-        AtomTerm headTailElement = AtomTerm.get(headTerm.toString()+"|"+tailTerm.toString());
-        Term[] headTailArgs = new Term[]{headTailElement};
+        Term[] headTailArgs = new Term[]{headTerm, tailTerm};
         AtomTerm headTailFunctor = AtomTerm.get("."); 
         CompoundTerm headTailList = new CompoundTerm(headTailFunctor, headTailArgs);
         Term[] headTailPredicateArgs = new Term[]{headTailList};
         CompoundTerm headTailTerm = new CompoundTerm(predicate, headTailPredicateArgs);
+        System.out.println("headTailTerm = " + headTailTerm.toString());
+
         AtomTerm existTerm = AtomTerm.get("exist");
         AtomTerm usa = AtomTerm.get("usa");
         AtomTerm usa2 = AtomTerm.get("usa2");
@@ -93,6 +94,7 @@ public class Main {
         Term[] usa2Args = new Term[]{usa2};
         CompoundTerm usaTerm = new CompoundTerm(existTerm, usaArgs);
         CompoundTerm usa2Term = new CompoundTerm(existTerm, usa2Args);
+
         Term[] ruleFirstTermArgs = new Term[]{headTerm};
         CompoundTerm ruleFirstTerm = new CompoundTerm(existTerm, ruleFirstTermArgs);
         Term[] ruleSecondTermArgs = new Term[]{tailTerm};
@@ -101,7 +103,6 @@ public class Main {
         CompoundTerm headTailClauseTerm = new CompoundTerm(TermConstants.conjunctionTag, headTailClauseTermArgs);
         Term[] headTailClauseArgs = new Term[]{headTailTerm, headTailClauseTerm};
         CompoundTerm headTailClause = new CompoundTerm (TermConstants.clauseTag, headTailClauseArgs);
-        System.out.println("headTailClause = " + headTailClause.toString());
 
         /* ADD THE CLAUSES TO THE DATABASE
          *
@@ -118,6 +119,8 @@ public class Main {
                 PrologTextLoader object and the Term object to be added
          */
         Environment env = new Environment();
+        AtomTerm file = AtomTerm.get("/home/robert/Documents/cristof/prolog/java/test_file.txt");
+        env.ensureLoaded(file);
         PrologTextLoaderState state = env.getPrologTextLoaderState();
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
         //add
@@ -140,8 +143,7 @@ public class Main {
         //null it means it was defined and you can get the clauses that contain the predicate name
         //by calling state.geModule().getClauses() which returns a List<Term> where the clauses
         //that contain the predicate reside
-
-        //remove(state, regula);
+        remove(state, regula);
         update(state, regula3);
         
         /*
@@ -236,6 +238,25 @@ public class Main {
             int rc = interpreter.execute(headTailGoal);
             System.out.println("rc = " + rc);
         }catch(PrologException e){
+            e.printStackTrace();
+        }
+        
+        AtomTerm predicateGoalTermFunctor = AtomTerm.get("predicate");
+        VariableTerm headGoalTerm = new VariableTerm("H");
+        VariableTerm tailGoalTerm = new VariableTerm("T");
+        Term[] predicateGoalArgs = new Term[]{headGoalTerm, tailGoalTerm};
+        AtomTerm headTailPredicateGoalTermFunctor = AtomTerm.get(".");
+        CompoundTerm headTailPredicateGoalTerm = new CompoundTerm(headTailPredicateGoalTermFunctor, predicateGoalArgs);
+        Term[] predicateGoalTermArgs = new Term[]{headTailPredicateGoalTerm};
+        CompoundTerm predicateGoalTerm = new CompoundTerm(predicateGoalTermFunctor, predicateGoalTermArgs);
+        Goal headTailListGoal = interpreter.prepareGoal(predicateGoalTerm);
+        try {
+            int rc = 0;
+            while (rc == 0){
+                rc = interpreter.execute(headTailListGoal); 
+                System.out.println("head tail list: rc =" + rc + "[H="+headGoalTerm.dereference().toString()+"|T="+tailGoalTerm.dereference().toString()+"]");
+            }
+        }catch (PrologException e){
             e.printStackTrace();
         }
         

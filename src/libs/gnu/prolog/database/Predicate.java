@@ -215,6 +215,8 @@ public class Predicate
 		{
 			throw new IllegalStateException("clauses could be added only to user defined predicate");
 		}
+        //TODO Remove
+        System.out.println("[Predicate.java]: Add clauses last " + clause.toString());
 		propertiesLocked = true;
 		clauses.add(clause);
 		module.predicateUpdated(tag);
