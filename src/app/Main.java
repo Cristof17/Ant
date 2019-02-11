@@ -14,21 +14,21 @@ import gnu.prolog.vm.TermConstants;
 public class Main {
     private static boolean DBG=true;
     public static void main(String[] args){
-        //predicate
+        //simple predicate frate(cristof, robert)
         AtomTerm cristof = AtomTerm.get("cristof");
         AtomTerm robert = AtomTerm.get("robert");
         AtomTerm frate = AtomTerm.get("frate"); 
         Term[] arguments = new Term[]{cristof, robert};
         CompoundTerm regula = new CompoundTerm(frate, arguments);
 
-        //predicate
+        //simple predicate frate(cristof, cric);
         AtomTerm frate2 = AtomTerm.get("frate");
         AtomTerm cristof2 = AtomTerm.get("cristof");
         AtomTerm cric = AtomTerm.get("cric");
         Term[] arguments3 = new Term[]{cristof2, cric};
         CompoundTerm regula3 = new CompoundTerm(frate2, arguments3);
 
-        //list
+        //simple list [1, 2, 3]
         AtomTerm listFunctor = AtomTerm.get(".");
         AtomTerm arg1 = AtomTerm.get("1");
         AtomTerm arg2 = AtomTerm.get("2");
@@ -36,7 +36,7 @@ public class Main {
         Term[] listArgs = new Term[]{arg1, arg2, arg3};
         CompoundTerm list = new CompoundTerm(listFunctor, listArgs);
 
-        //predicate with list
+        //predicate with list casa(3, [camera1, camera2, camera3])
         AtomTerm casa = AtomTerm.get("casa");
         AtomTerm numarCamere = AtomTerm.get("3");
         AtomTerm listFunctor2 = AtomTerm.get(".");
@@ -50,6 +50,7 @@ public class Main {
 
         //add a simple rule
         //create the rule
+        //simple rule iubeste(X) :- frumoasa(X), draguta(X).
         AtomTerm headFunctor = AtomTerm.get("iubeste");
         AtomTerm gigel = AtomTerm.get("gigel");
         VariableTerm headVariable = new VariableTerm("X");
