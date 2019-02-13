@@ -10,11 +10,13 @@ import gnu.prolog.vm.PrologException;
 import gnu.prolog.term.VariableTerm;
 import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.vm.TermConstants;
+import gnu.prolog.term.JavaObjectTerm;
 
 public class Main {
-    private static boolean DBG=true;
+    private static boolean DBG=false;
     public static void main(String[] args){
         //simple predicate frate(cristof, robert)
+
         AtomTerm cristof = AtomTerm.get("cristof");
         AtomTerm robert = AtomTerm.get("robert");
         AtomTerm frate = AtomTerm.get("frate"); 
@@ -85,7 +87,6 @@ public class Main {
         CompoundTerm headTailList = new CompoundTerm(headTailFunctor, headTailArgs);
         Term[] headTailPredicateArgs = new Term[]{headTailList};
         CompoundTerm headTailTerm = new CompoundTerm(predicate, headTailPredicateArgs);
-        System.out.println("headTailTerm = " + headTailTerm.toString());
 
         AtomTerm existTerm = AtomTerm.get("exist");
         AtomTerm usa = AtomTerm.get("usa");
@@ -103,6 +104,16 @@ public class Main {
         CompoundTerm headTailClauseTerm = new CompoundTerm(TermConstants.conjunctionTag, headTailClauseTermArgs);
         Term[] headTailClauseArgs = new Term[]{headTailTerm, headTailClauseTerm};
         CompoundTerm headTailClause = new CompoundTerm (TermConstants.clauseTag, headTailClauseArgs);
+
+	//rule with JavaObjectTerm
+	MyObject obj1 = new MyObject(1);
+	JavaObjectTerm java = new JavaObjectTerm(obj1);
+	AtomTerm javaTerm = AtomTerm.get("java");
+	Term[] javaRuleArgs = new Term[]{java};
+	CompoundTerm javaPredicate = new CompoundTerm(javaTerm, javaRuleArgs);
+
+	//JavaObjects
+	//add simple java object
 
         /* ADD THE CLAUSES TO THE DATABASE
          *
@@ -137,6 +148,20 @@ public class Main {
         state.addClause(loader, usaTerm);
         state.addClause(loader, usa2Term);
         state.addClause(loader, headTailClause);
+	state.addClause(loader, javaPredicate);
+		if (DBG){
+			System.out.println("add: " + regula.toString());
+			System.out.println("add: " + regula3.toString());
+			System.out.println("add: " + list.toString());
+			System.out.println("add: " + ruleWithList.toString());
+			System.out.println("add: " + bodyPredicate1.toString());
+			System.out.println("add: " + bodyPredicate2.toString());
+			System.out.println("add: " + simpleRule.toString());
+			System.out.println("add: " + usaTerm.toString());
+			System.out.println("add: " + usa2Term.toString());
+			System.out.println("add: " + headTailClause.toString());
+			System.out.println("add: " + javaPredicate.toString());
+		}
         //get
         //call state.getModule().getDefinedPredicate(tag) where tag is a CompundTerm.tag object
         //the call returns a predicate which contains the tag. If the predicate is different than
@@ -145,6 +170,7 @@ public class Main {
         //that contain the predicate reside
         remove(state, regula);
         update(state, regula3);
+
         
         /*
          * RUN QUERYS
@@ -158,6 +184,7 @@ public class Main {
             the goal
          * -call interpreter.stop(goalObject);
          */
+		//simple predicate
         AtomTerm goalFunctor = AtomTerm.get("frate");
         AtomTerm first = AtomTerm.get("cristof");
         VariableTerm variable = new VariableTerm("X");
@@ -165,12 +192,14 @@ public class Main {
         CompoundTerm goalTerm = new CompoundTerm(goalFunctor, goalArguments);
         Interpreter interpreter = env.createInterpreter();
         Goal goal = interpreter.prepareGoal(goalTerm);
+		if (DBG){
+			System.out.println("query: simple predicate: frate(cristof, X)");
+		}
         try {
             int rc = 0;
             do{
-                System.out.println("[MAIN]: Execut in main");
                 rc = interpreter.execute(goal);
-                System.out.println("rc = " + rc + " variable = " + variable.dereference().toString());
+                System.out.println("rc = " + rc + " X = " + variable.dereference().toString());
                 if (rc == 1)
                     break;
             }while(rc > -1);
@@ -179,7 +208,7 @@ public class Main {
         }
 
 
-        //get the parameter of a list in prolog
+        //simple list
         AtomTerm listGoalFunctor = AtomTerm.get(".");
         AtomTerm listGoalArg1 = AtomTerm.get("1");
         AtomTerm listGoalArg2 = AtomTerm.get("2");
@@ -188,59 +217,50 @@ public class Main {
         Term listGoalArgs[] = new Term[]{listGoalArg1, listVariable, listGoalArg3};
         Term listGoalTerm = new CompoundTerm(listGoalFunctor, listGoalArgs);
         Goal listGoal = interpreter.prepareGoal(listGoalTerm);
+		if(DBG){
+			System.out.println("query: simple list: [1, X, 3]");
+		}
         try {
             int rc = interpreter.execute(listGoal);
-            System.out.println("rc = " + rc + " variable = " + listVariable.dereference().toString()); 
+            System.out.println("rc = " + rc + " X = " + listVariable.dereference().toString()); 
         }catch(PrologException e){
-            e.printStackTrace();
-        }
+            e.printStackTrace(); }
 
+		//predicate with list casa(3, Y)
         AtomTerm ruleWithListGoalFunctor = AtomTerm.get("casa");
         AtomTerm ruleWithListGoalArg1 = AtomTerm.get("3");
         VariableTerm ruleWithListGoalVariableTerm = new VariableTerm("Y");
         Term[] ruleWithListGoalTermArgs = new Term[]{ruleWithListGoalArg1, ruleWithListGoalVariableTerm};
         CompoundTerm ruleWithListGoalTerm = new CompoundTerm(ruleWithListGoalFunctor, ruleWithListGoalTermArgs);
         Goal ruleWithListGoal = interpreter.prepareGoal(ruleWithListGoalTerm);
+		if (DBG){
+			System.out.println("query: rule with list: casa(3, Y)");
+		}
         try {
             int rc = interpreter.execute(ruleWithListGoal);
-            System.out.println("rc = " + rc + " variable = " + ruleWithListGoalVariableTerm.dereference().toString());
+            System.out.println("rc = " + rc + " Y = " + ruleWithListGoalVariableTerm.dereference().toString());
         }catch(PrologException e){
             e.printStackTrace();
         }
 
 
-        //query the simple rule
+        //simple clause query
         AtomTerm simpleRuleGoalFunctor = AtomTerm.get("iubeste");
-        AtomTerm marcel = AtomTerm.get("marcel");
-        AtomTerm gigelGoal = AtomTerm.get("gigel");
         VariableTerm simpleRuleVariable = new VariableTerm("Y");
         Term simpleRuleGoalTermArgs[] = new Term[]{simpleRuleVariable};
         CompoundTerm simpleRuleGoalTerm = new CompoundTerm(simpleRuleGoalFunctor, simpleRuleGoalTermArgs);
         Goal simpleRuleGoal = interpreter.prepareGoal(simpleRuleGoalTerm);
+		if (DBG){
+			System.out.println("query: simple rule: iubeste(Y)");
+		}
         try{
             int rc = interpreter.execute(simpleRuleGoal);
-            System.out.println("simpleRule rc = " + rc + " variable = " + simpleRuleVariable.dereference().toString());
+            System.out.println("rc = " + rc + " Y = " + simpleRuleVariable.dereference().toString());
         }catch(PrologException e){
             e.printStackTrace();
         }
 
-        //query head tail rule
-        AtomTerm headTailGoalTermPredicate = AtomTerm.get("predicate");
-        VariableTerm headTailGoalArgTermListArg1 = new VariableTerm("X");
-        AtomTerm headTailGoalArgTermListArg2 = AtomTerm.get("cricric");
-        Term[] headTailGoalArgTermListArgs = new Term[]{headTailGoalArgTermListArg1, headTailGoalArgTermListArg2};
-        AtomTerm headTailGoalArgTermListFunctor = AtomTerm.get(".");
-        CompoundTerm headTailGoalArgTerm = new CompoundTerm(headTailGoalArgTermListFunctor, headTailGoalArgTermListArgs);
-        Term[] headTailGoalTermArgs = new Term[]{headTailGoalArgTerm};
-        CompoundTerm headTailGoalTerm = new CompoundTerm(headTailGoalTermPredicate, headTailGoalTermArgs);
-        Goal headTailGoal = interpreter.prepareGoal(headTailGoalTerm);
-        try {
-            int rc = interpreter.execute(headTailGoal);
-            System.out.println("rc = " + rc);
-        }catch(PrologException e){
-            e.printStackTrace();
-        }
-        
+	//clause with list with [H|T]
         AtomTerm predicateGoalTermFunctor = AtomTerm.get("predicate");
         VariableTerm headGoalTerm = new VariableTerm("H");
         VariableTerm tailGoalTerm = new VariableTerm("T");
@@ -250,19 +270,155 @@ public class Main {
         Term[] predicateGoalTermArgs = new Term[]{headTailPredicateGoalTerm};
         CompoundTerm predicateGoalTerm = new CompoundTerm(predicateGoalTermFunctor, predicateGoalTermArgs);
         Goal headTailListGoal = interpreter.prepareGoal(predicateGoalTerm);
+		if (DBG){
+			System.out.println("query: list with [H|T]: predicate([H|T])");
+		}
         try {
             int rc = 0;
             while (rc == 0){
                 rc = interpreter.execute(headTailListGoal); 
-                System.out.println("head tail list: rc =" + rc + "[H="+headGoalTerm.dereference().toString()+"|T="+tailGoalTerm.dereference().toString()+"]");
+                System.out.println("rc =" + rc + "[H="+headGoalTerm.dereference().toString()+"|T="+tailGoalTerm.dereference().toString()+"]");
             }
         }catch (PrologException e){
             e.printStackTrace();
         }
+
+	AtomTerm javaGoalPredicate = AtomTerm.get("java");
+	VariableTerm javaGoalVariable = new VariableTerm("X");
+	Term[] javaGoalArgs = new Term[]{javaGoalVariable};
+	CompoundTerm javaGoalTerm = new CompoundTerm(javaGoalPredicate, javaGoalArgs);
+	Goal javaGoal = interpreter.prepareGoal(javaGoalTerm);
+	if (DBG){
+		System.out.println("query = java object java(Y)");
+	}
+	try {
+		int rc = interpreter.execute(javaGoal);
+		System.out.println("rc = " + rc + " Y = " + javaGoalVariable.dereference().toString());
+		boolean equal = javaGoalVariable.dereference().equals(java);
+		System.out.println("JavaGoalVariable class type = " + equal);
+		
+	}catch(PrologException e){
+		e.printStackTrace();
+	}
         
     }
 
-   static void remove(PrologTextLoaderState state, CompoundTerm regula){
+	static void addPredicate(PrologTextLoaderState state
+				,PrologTextLoader loader
+				,String functor
+				,String...arguments) throws Exception{
+		if (state == null){
+			throw new NullPointerException("State is null");
+		}
+		if (loader == null){
+			throw new NullPointerException("Loader is null");
+		}
+		if(functor == null){
+			throw new NullPointerException("Functor is null");
+		}
+		if (functor.equals("")){
+			throw new Exception("Functor equlas empty string");
+		}
+		if (arguments == null){
+			throw new NullPointerException("Arguments are null");
+		}
+		if (arguments.length == 0){
+			throw new Exception("Arguments list is emtpy");
+		}
+		int i = 0;
+		int argumentsLength = arguments.length;
+		Term[] ruleArguments = new Term[argumentsLength];
+		for (i = 0; i < argumentsLength; ++i){
+			ruleArguments[i] = AtomTerm.get(arguments[i]);
+		}
+		AtomTerm rulePredicate = AtomTerm.get(functor);
+		CompoundTerm rule = new CompoundTerm(rulePredicate, ruleArguments);
+		state.addClause(loader, rule);
+	}
+
+	static void addPredicateWithArgsAsList(PrologTextLoaderState state,
+				PrologTextLoader loader
+				,String functor
+				,String...listArguments) throws Exception{
+		if (state == null){
+			throw new NullPointerException("State is null");
+		}
+		if (loader == null){
+			throw new NullPointerException("Loader is null");
+		}
+		if(functor == null){
+			throw new NullPointerException("Functor is null");
+		}
+		if (functor.equals("")){
+			throw new Exception("Functor equlas empty string");
+		}
+		if (listArguments == null){
+			throw new NullPointerException("listArguments are null");
+		}
+		if (listArguments.length == 0){
+			throw new Exception("listArguments is emtpy");
+		}
+		int i = 0;
+		int listArgumentsLength = listArguments.length;
+		Term[] listArgumentsTerms = new Term[listArgumentsLength];
+		for (i = 0; i < listArgumentsLength; ++i){
+			listArgumentsTerms[i] = AtomTerm.get(listArguments[i]);	
+		}
+		AtomTerm rulePredicate = AtomTerm.get(functor);
+		CompoundTerm rule = new CompoundTerm(rulePredicate, listArgumentsTerms);
+		state.addClause(loader, rule);
+	}
+
+	static void addPredicate(PrologTextLoaderState state
+			,PrologTextLoader loader
+			,String functor
+			,String[] nonListArguments
+			,String...listArguments) throws Exception {
+		if (state == null){
+			throw new NullPointerException("State is null");
+		}
+		if (loader == null){
+			throw new NullPointerException("Loader is null");
+		}
+		if(functor == null){
+			throw new NullPointerException("Functor is null");
+		}
+		if (functor.equals("")){
+			throw new Exception("Functor equlas empty string");
+		}
+		if (nonListArguments == null){
+			throw new NullPointerException("nonListArguments are null");
+		}
+		if (nonListArguments.length == 0){
+			throw new Exception("nonListArguments is emtpy");
+		}
+		if (listArguments == null){
+			throw new NullPointerException("listArguments are null");
+		}
+		if (listArguments.length == 0){
+			throw new Exception("listArguments is emtpy");
+		}
+		int i = 0;
+		int nonListArgumentsLength = nonListArguments.length;	
+		int listArgumentsLength = listArguments.length;
+		Term[] listArgumentsTerms = new Term[listArgumentsLength];
+		for (i = 0; i < listArguments.length; ++i){
+			listArgumentsTerms[i] = AtomTerm.get(listArguments[i]);	
+		}
+		AtomTerm listPredicate = AtomTerm.get(".");
+		CompoundTerm listTerm = new CompoundTerm(listPredicate, listArgumentsTerms);
+		Term[] nonListArgumentsTerms = new Term[nonListArgumentsLength + 1];
+		//+1 is for the list term passed as argument
+		for (i = 0; i < nonListArgumentsLength; ++i){
+			nonListArgumentsTerms[i] = AtomTerm.get(nonListArguments[i]);
+		}
+		AtomTerm rulePredicate = AtomTerm.get(functor);
+		int lastPosition = nonListArguments.length-1;
+		nonListArgumentsTerms[lastPosition] = listTerm;
+		CompoundTerm rule = new CompoundTerm(rulePredicate, nonListArgumentsTerms);
+	}
+
+   	static void remove(PrologTextLoaderState state, CompoundTerm regula){
         //remove
         //cannot remove simply by calling removeClause with the clause defined by us
         //because the clause that we are passing to remove is not the same object as
@@ -280,15 +436,19 @@ public class Main {
                 Term firstArg = compoundClause.args[0];//the tag is :-
                 if (firstArg instanceof CompoundTerm){
                     CompoundTerm realClause = (CompoundTerm)firstArg;
-                    System.out.println(realClause);
+                    //System.out.println(realClause);
                     if (realClause.compareTo(regula) == 0){
                         //o iau din lista de clause a predicatului si o sterg
                         predicate.removeClause(clause);
+				if (DBG){
+					System.out.println("remove: " + regula.toString());
+				}
                     }
                 }
             }
         }
     }
+
 
     static void update(PrologTextLoaderState state, CompoundTerm regula){
         //update de facut metoda speciala pentru el
@@ -302,15 +462,20 @@ public class Main {
             Term clause = it2.next();
             if (clause instanceof CompoundTerm){
                 CompoundTerm compoundClause = (CompoundTerm)clause;
-                System.out.println(compoundClause);
+                //System.out.println(compoundClause);
                 Term firstArg = compoundClause.args[0];//the tag is :-
                 if (firstArg instanceof CompoundTerm){
                     CompoundTerm realClause = (CompoundTerm)firstArg;
-                    System.out.println(realClause);
-                    AtomTerm atomTerm = (AtomTerm)realClause.args[1];
+                    //System.out.println(realClause);
                     if (realClause.compareTo(regula) == 0){
                         //o iau din lista de clause a predicatului si o sterg
-                        realClause.args[1] = AtomTerm.get("geam");
+						if (DBG){
+							System.out.print("update : " + regula.toString());
+						}
+                      	realClause.args[1] = AtomTerm.get("geam");
+       					if (DBG){
+       						System.out.println(" to " + realClause.toString());
+						} 
                     }
                 }
             }
