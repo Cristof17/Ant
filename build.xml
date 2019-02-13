@@ -27,12 +27,12 @@
         <mkdir dir="${jardir}"/>
         <jar destfile="${jardir}/${outjarfile}" basedir="${dstdir}/${libsdstdir}"/>
     </target>
-    <target name="compile" depends="gnuprolog">
+    <target name="build" depends="gnuprolog">
         <javac srcdir="${srcdir}/${appsrcdir}" destdir="${dstdir}/${appdstdir}">
             <classpath refid="libspath"/>
         </javac>
     </target>
-    <target name="run" depends="compile">
+    <target name="run" depends="build">
         <java classname="Main">
             <classpath>
                 <path refid="libspath"/>

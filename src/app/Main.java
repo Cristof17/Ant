@@ -73,7 +73,6 @@ public class Main {
         Term bodyPredicateArgs2[] = new Term[]{gigel};
         CompoundTerm bodyPredicate2 = new CompoundTerm(bodyFunctor2, bodyPredicateArgs2);
 
-
         //add a simple list for head and tail query
         //exist(usa);
         //exist(usa2);
