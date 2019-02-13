@@ -10,6 +10,7 @@ import gnu.prolog.vm.PrologException;
 import gnu.prolog.term.VariableTerm;
 import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.vm.TermConstants;
+import gnu.prolog.term.JavaObjectTerm;
 
 public class Main {
     private static boolean DBG=false;
@@ -105,6 +106,13 @@ public class Main {
         Term[] headTailClauseArgs = new Term[]{headTailTerm, headTailClauseTerm};
         CompoundTerm headTailClause = new CompoundTerm (TermConstants.clauseTag, headTailClauseArgs);
 
+	//rule with JavaObjectTerm
+	MyObject obj1 = new MyObject(1);
+	JavaObjectTerm java = new JavaObjectTerm(obj1);
+	AtomTerm javaTerm = AtomTerm.get("java");
+	Term[] javaRuleArgs = new Term[]{java};
+	CompoundTerm javaPredicate = new CompoundTerm(javaTerm, javaRuleArgs);
+
 	//JavaObjects
 	//add simple java object
 
@@ -141,6 +149,7 @@ public class Main {
         state.addClause(loader, usaTerm);
         state.addClause(loader, usa2Term);
         state.addClause(loader, headTailClause);
+	state.addClause(loader, javaPredicate);
 		if (DBG){
 			System.out.println("add: " + regula.toString());
 			System.out.println("add: " + regula3.toString());
@@ -152,6 +161,7 @@ public class Main {
 			System.out.println("add: " + usaTerm.toString());
 			System.out.println("add: " + usa2Term.toString());
 			System.out.println("add: " + headTailClause.toString());
+			System.out.println("add: " + javaPredicate.toString());
 		}
         //get
         //call state.getModule().getDefinedPredicate(tag) where tag is a CompundTerm.tag object
@@ -161,6 +171,7 @@ public class Main {
         //that contain the predicate reside
         remove(state, regula);
         update(state, regula3);
+
         
         /*
          * RUN QUERYS
@@ -272,6 +283,24 @@ public class Main {
         }catch (PrologException e){
             e.printStackTrace();
         }
+
+	AtomTerm javaGoalPredicate = AtomTerm.get("java");
+	VariableTerm javaGoalVariable = new VariableTerm("X");
+	Term[] javaGoalArgs = new Term[]{javaGoalVariable};
+	CompoundTerm javaGoalTerm = new CompoundTerm(javaGoalPredicate, javaGoalArgs);
+	Goal javaGoal = interpreter.prepareGoal(javaGoalTerm);
+	if (DBG){
+		System.out.println("query = java object java(Y)");
+	}
+	try {
+		int rc = interpreter.execute(javaGoal);
+		System.out.println("rc = " + rc + " Y = " + javaGoalVariable.dereference().toString());
+		boolean equal = javaGoalVariable.dereference().equals(java);
+		System.out.println("JavaGoalVariable class type = " + equal);
+		
+	}catch(PrologException e){
+		e.printStackTrace();
+	}
         
     }
 
