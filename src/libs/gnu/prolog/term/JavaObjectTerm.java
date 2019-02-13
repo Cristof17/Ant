@@ -47,4 +47,19 @@ public class JavaObjectTerm extends AtomicTerm
 	{
 		return JAVA_OBJECT;
 	}
+
+	@Override
+	public boolean equals(Object o){
+		if (o == null)
+			return false;
+		if (!(o instanceof JavaObjectTerm))
+			return false;
+		JavaObjectTerm term = (JavaObjectTerm)o;
+		return this.value.equals(term.value);
+	}
+
+	@Override
+	public int hashCode(){
+		return value.hashCode();
+	}
 }
