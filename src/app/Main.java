@@ -15,6 +15,7 @@ public class Main {
     private static boolean DBG=false;
     public static void main(String[] args){
         //simple predicate frate(cristof, robert)
+
         AtomTerm cristof = AtomTerm.get("cristof");
         AtomTerm robert = AtomTerm.get("robert");
         AtomTerm frate = AtomTerm.get("frate"); 
@@ -246,7 +247,7 @@ public class Main {
             e.printStackTrace();
         }
 
-		//clause with list with [H|T]
+	//clause with list with [H|T]
         AtomTerm predicateGoalTermFunctor = AtomTerm.get("predicate");
         VariableTerm headGoalTerm = new VariableTerm("H");
         VariableTerm tailGoalTerm = new VariableTerm("T");
@@ -270,8 +271,126 @@ public class Main {
         }
         
     }
+	static void addPredicate(PrologTextLoaderState state
+				,PrologTextLoader loader
+				,String functor
+				,String...arguments) throws Exception{
+		if (state == null){
+			throw new NullPointerException("State is null");
+		}
+		if (loader == null){
+			throw new NullPointerException("Loader is null");
+		}
+		if(functor == null){
+			throw new NullPointerException("Functor is null");
+		}
+		if (functor.equals("")){
+			throw new Exception("Functor equlas empty string");
+		}
 
-   static void remove(PrologTextLoaderState state, CompoundTerm regula){
+		if (arguments == null){
+			throw new NullPointerException("Arguments are null");
+		}
+		if (arguments.length == 0){
+			throw new Exception("Arguments list is emtpy");
+		}
+		int i = 0;
+		int argumentsLength = arguments.length;
+		Term[] ruleArguments = new Term[argumentsLength];
+		for (i = 0; i < argumentsLength; ++i){
+			ruleArguments[i] = AtomTerm.get(arguments[i]);
+		}
+		AtomTerm rulePredicate = AtomTerm.get(functor);
+		CompoundTerm rule = new CompoundTerm(rulePredicate, ruleArguments);
+		state.addClause(loader, rule);
+	}
+
+	static void addPredicateWithArgsAsList(PrologTextLoaderState state,
+				PrologTextLoader loader
+				,String functor
+				,String...listArguments) throws Exception{
+		if (state == null){
+			throw new NullPointerException("State is null");
+		}
+		if (loader == null){
+			throw new NullPointerException("Loader is null");
+		}
+		if(functor == null){
+			throw new NullPointerException("Functor is null");
+		}
+		if (functor.equals("")){
+			throw new Exception("Functor equlas empty string");
+		}
+		if (listArguments == null){
+			throw new NullPointerException("listArguments are null");
+		}
+		if (listArguments.length == 0){
+			throw new Exception("listArguments is emtpy");
+		}
+		int i = 0;
+		int listArgumentsLength = listArguments.length;
+		Term[] listArgumentsTerms = new Term[listArgumentsLength];
+		for (i = 0; i < listArgumentsLength; ++i){
+			listArgumentsTerms[i] = AtomTerm.get(listArguments[i]);	
+		}
+		AtomTerm rulePredicate = AtomTerm.get(functor);
+		CompoundTerm rule = new CompoundTerm(rulePredicate, listArgumentsTerms);
+		state.addClause(loader, rule);
+	}
+
+	static void addPredicate(PrologTextLoaderState state
+			,PrologTextLoader loader
+			,String functor
+			,String[] nonListArguments
+			,String...listArguments) throws Exception {
+		if (state == null){
+			throw new NullPointerException("State is null");
+		}
+		if (loader == null){
+			throw new NullPointerException("Loader is null");
+		}
+		if(functor == null){
+			throw new NullPointerException("Functor is null");
+		}
+		if (functor.equals("")){
+			throw new Exception("Functor equlas empty string");
+		}
+		if (nonListArguments == null){
+			throw new NullPointerException("nonListArguments are null");
+		}
+		if (nonListArguments.length == 0){
+			throw new Exception("nonListArguments is emtpy");
+		}
+		if (listArguments == null){
+			throw new NullPointerException("listArguments are null");
+		}
+		if (listArguments.length == 0){
+			throw new Exception("listArguments is emtpy");
+		}
+		int i = 0;
+		int nonListArgumentsLength = nonListArguments.length;	
+		int listArgumentsLength = listArguments.length;
+		Term[] listArgumentsTerms = new Term[listArgumentsLength];
+		for (i = 0; i < listArguments.length; ++i){
+			listArgumentsTerms[i] = AtomTerm.get(listArguments[i]);	
+		}
+		AtomTerm listPredicate = AtomTerm.get(".");
+		CompoundTerm listTerm = new CompoundTerm(listPredicate, listArgumentsTerms);
+		Term[] nonListArgumentsTerms = new Term[nonListArgumentsLength + 1];
+		//+1 is for the list term passed as argument
+		for (i = 0; i < nonListArgumentsLength; ++i){
+			nonListArgumentsTerms[i] = AtomTerm.get(nonListArguments[i]);
+		}
+		AtomTerm rulePredicate = AtomTerm.get(functor);
+		int lastPosition = nonListArguments.length-1;
+		nonListArgumentsTerms[lastPosition] = listTerm;
+		CompoundTerm rule = new CompoundTerm(rulePredicate, nonListArgumentsTerms);
+	}
+
+	static void addRule(
+
+
+   	static void remove(PrologTextLoaderState state, CompoundTerm regula){
         //remove
         //cannot remove simply by calling removeClause with the clause defined by us
         //because the clause that we are passing to remove is not the same object as
