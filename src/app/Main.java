@@ -105,6 +105,9 @@ public class Main {
         Term[] headTailClauseArgs = new Term[]{headTailTerm, headTailClauseTerm};
         CompoundTerm headTailClause = new CompoundTerm (TermConstants.clauseTag, headTailClauseArgs);
 
+	//JavaObjects
+	//add simple java object
+
         /* ADD THE CLAUSES TO THE DATABASE
          *
          * Steps:
@@ -271,6 +274,7 @@ public class Main {
         }
         
     }
+
 	static void addPredicate(PrologTextLoaderState state
 				,PrologTextLoader loader
 				,String functor
@@ -287,7 +291,6 @@ public class Main {
 		if (functor.equals("")){
 			throw new Exception("Functor equlas empty string");
 		}
-
 		if (arguments == null){
 			throw new NullPointerException("Arguments are null");
 		}
@@ -387,9 +390,6 @@ public class Main {
 		CompoundTerm rule = new CompoundTerm(rulePredicate, nonListArgumentsTerms);
 	}
 
-	static void addRule(
-
-
    	static void remove(PrologTextLoaderState state, CompoundTerm regula){
         //remove
         //cannot remove simply by calling removeClause with the clause defined by us
@@ -412,14 +412,15 @@ public class Main {
                     if (realClause.compareTo(regula) == 0){
                         //o iau din lista de clause a predicatului si o sterg
                         predicate.removeClause(clause);
-						if (DBG){
-							System.out.println("remove: " + regula.toString());
-						}
+				if (DBG){
+					System.out.println("remove: " + regula.toString());
+				}
                     }
                 }
             }
         }
     }
+
 
     static void update(PrologTextLoaderState state, CompoundTerm regula){
         //update de facut metoda speciala pentru el
