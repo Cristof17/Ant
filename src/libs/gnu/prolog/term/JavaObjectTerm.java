@@ -62,4 +62,13 @@ public class JavaObjectTerm extends AtomicTerm
 	public int hashCode(){
 		return value.hashCode();
 	}
+
+	@Override 
+	public String toString(){
+		if (value == null)
+			return "";
+		if (value.equals(""))
+			return "";
+		return "("+value.toString()+")";
+	}
 }
