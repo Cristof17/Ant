@@ -131,15 +131,15 @@ public class Main {
          */
         Environment env = new Environment();
         AtomTerm file = AtomTerm.get("/home/cristof/Documents/prolog/java/rules");
-	/**
-	 * Each Environment object creates a PrologTextLoaderState object which 
-	 * contains a different Module object which contains a HashMap database of 
-	 * objects called tag2predicate. If it is wished to keep all the information
-	 * in a single database, use the same environment object
-	 * If it is wished that there are two separate databases, use two environment
-	 * objects
-	 *
-	 */
+    	/**
+    	 * Each Environment object creates a PrologTextLoaderState object which 
+    	 * contains a different Module object which contains a HashMap database of 
+    	 * objects called tag2predicate. If it is wished to keep all the information
+    	 * in a single database, use the same environment object
+    	 * If it is wished that there are two separate databases, use two environment
+    	 * objects
+    	 *
+    	 */
         env.ensureLoaded(file);
         PrologTextLoaderState state = env.getPrologTextLoaderState();
 	System.out.println("Aici");
