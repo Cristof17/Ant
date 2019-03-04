@@ -345,7 +345,6 @@ public class PrologTextLoaderState implements PrologTextLoaderListener, HasEnvir
 		if (p == null)
 		{
 			p = module.createDefinedPredicate(tag);
-			System.out.println("Creating predicate " + tag.toString());
 		}
 		return p;
 	}
