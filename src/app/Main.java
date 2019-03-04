@@ -13,8 +13,9 @@ import gnu.prolog.vm.TermConstants;
 import gnu.prolog.term.JavaObjectTerm;
 
 public class Main {
-    private static boolean DBG=false;
-    public static void main(String[] args){
+
+        private static boolean DBG=false;
+        public static void main(String[] args){
         //simple predicate frate(cristof, robert)
 
         AtomTerm cristof = AtomTerm.get("cristof");
@@ -129,7 +130,7 @@ public class Main {
                 PrologTextLoader object and the Term object to be added
          */
         Environment env = new Environment();
-        AtomTerm file = AtomTerm.get("/home/robert/Documents/cristof/prolog/java/test_file.txt");
+        AtomTerm file = AtomTerm.get("rules.pl");
         env.ensureLoaded(file);
         PrologTextLoaderState state = env.getPrologTextLoaderState();
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
@@ -225,6 +226,7 @@ public class Main {
         }catch(PrologException e){
             e.printStackTrace(); }
 
+
 		//predicate with list casa(3, Y)
         AtomTerm ruleWithListGoalFunctor = AtomTerm.get("casa");
         AtomTerm ruleWithListGoalArg1 = AtomTerm.get("3");
@@ -259,7 +261,7 @@ public class Main {
             e.printStackTrace();
         }
 
-	//clause with list with [H|T]
+	    //clause with list with [H|T]
         AtomTerm predicateGoalTermFunctor = AtomTerm.get("predicate");
         VariableTerm headGoalTerm = new VariableTerm("H");
         VariableTerm tailGoalTerm = new VariableTerm("T");
@@ -296,6 +298,19 @@ public class Main {
             boolean equal = javaGoalVariable.dereference().equals(java);
             System.out.println("JavaGoalVariable class type = " + equal);
             
+        }catch(PrologException e){
+            e.printStackTrace();
+        }
+
+        AtomTerm filePredicateTerm = AtomTerm.get("means");
+        AtomTerm filePredicateTermFirstArgument = AtomTerm.get("move1");
+        AtomTerm filePredicateTermSecondArgument = AtomTerm.get("semantic1");
+        Term filePredicateTermArgs[] = new Term[]{filePredicateTermFirstArgument, filePredicateTermSecondArgument};
+        CompoundTerm fromFilePredicateTerm = new CompoundTerm(filePredicateTerm, filePredicateTermArgs);
+        try {
+            Goal filePredicateTermGoal = interpreter.prepareGoal(fromFilePredicateTerm);
+            int rc = interpreter.execute(filePredicateTermGoal);
+            System.out.println("filePredicateTermGoal Rc = " + rc);
         }catch(PrologException e){
             e.printStackTrace();
         }
