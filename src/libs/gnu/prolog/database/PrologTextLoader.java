@@ -99,7 +99,6 @@ public class PrologTextLoader
 		catch (Exception ex)
 		{
 			logError("could not open file \'" + currentFile + "\': " + ex.getMessage());
-			System.out.println("PrologTextLoader.java: Error " + ex.getMessage());
 			return;
 		}
 		processFile();
