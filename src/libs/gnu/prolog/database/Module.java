@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Hashtable;
 
 /**
  * Module in database
@@ -43,7 +44,6 @@ public class Module
 	/** initialization */
 	protected List<Pair<PrologTextLoaderError, Term>> initialization = Collections
 			.synchronizedList(new ArrayList<Pair<PrologTextLoaderError, Term>>());
-
 	/**
 	 * create new predicate defined in this module
 	 * 
@@ -59,8 +59,9 @@ public class Module
 		{
 			throw new IllegalStateException("A predicate already exists.");
 		}
+
 		Predicate p = new Predicate(this, tag);
-		tag2predicate.put(tag, p);
+		Predicate prev = tag2predicate.put(tag, p);
 		predicateUpdated(tag);
 		return p;
 	}

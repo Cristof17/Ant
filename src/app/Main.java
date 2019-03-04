@@ -130,9 +130,19 @@ public class Main {
                 PrologTextLoader object and the Term object to be added
          */
         Environment env = new Environment();
-        AtomTerm file = AtomTerm.get("rules.pl");
+        AtomTerm file = AtomTerm.get("/home/cristof/Documents/prolog/java/rules");
+	/**
+	 * Each Environment object creates a PrologTextLoaderState object which 
+	 * contains a different Module object which contains a HashMap database of 
+	 * objects called tag2predicate. If it is wished to keep all the information
+	 * in a single database, use the same environment object
+	 * If it is wished that there are two separate databases, use two environment
+	 * objects
+	 *
+	 */
         env.ensureLoaded(file);
         PrologTextLoaderState state = env.getPrologTextLoaderState();
+	System.out.println("Aici");
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
         //add
         state.addClause(loader, regula);
@@ -302,11 +312,10 @@ public class Main {
             e.printStackTrace();
         }
 
-        AtomTerm filePredicateTerm = AtomTerm.get("means");
-        AtomTerm filePredicateTermFirstArgument = AtomTerm.get("move1");
-        AtomTerm filePredicateTermSecondArgument = AtomTerm.get("semantic1");
-        Term filePredicateTermArgs[] = new Term[]{filePredicateTermFirstArgument, filePredicateTermSecondArgument};
-        CompoundTerm fromFilePredicateTerm = new CompoundTerm(filePredicateTerm, filePredicateTermArgs);
+        AtomTerm filePredicateTerm = AtomTerm.get("sunny");
+	AtomTerm filePredicateTermFirstArgument = AtomTerm.get("outside");
+	Term filePredicateSunnyTermArgs[] = new Term[]{filePredicateTermFirstArgument};
+        CompoundTerm fromFilePredicateTerm = new CompoundTerm(filePredicateTerm, filePredicateSunnyTermArgs);
         try {
             Goal filePredicateTermGoal = interpreter.prepareGoal(fromFilePredicateTerm);
             int rc = interpreter.execute(filePredicateTermGoal);
