@@ -90,7 +90,6 @@ public class PrologTextLoader
 		this(prologTextLoaderState);
 		rootFile = prologTextLoaderState.getInputName(root);
 		currentFile = rootFile;
-		System.out.println("PrologTextLoader.java " + root.toString());
 		try
 		{
 			currentReader = new TermReader(new InputStreamReader(prologTextLoaderState.getInputStream(root)),
