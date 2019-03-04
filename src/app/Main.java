@@ -130,7 +130,7 @@ public class Main {
                 PrologTextLoader object and the Term object to be added
          */
         Environment env = new Environment();
-        AtomTerm file = AtomTerm.get("rules.pl");
+        AtomTerm file = AtomTerm.get("/home/cristof/Documents/prolog/java/rules");
         env.ensureLoaded(file);
         PrologTextLoaderState state = env.getPrologTextLoaderState();
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);

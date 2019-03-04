@@ -427,6 +427,7 @@ public class Environment implements PredicateListener
 	public synchronized void ensureLoaded(Term term)
 	{
 		prologTextLoaderState.ensureLoaded(term);
+		System.out.println("Environment.java: ensureLoaded" + term.toString());
 	}
 
 	/**
