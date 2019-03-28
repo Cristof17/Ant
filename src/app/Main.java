@@ -142,7 +142,7 @@ public class Main {
     	 */
         env.ensureLoaded(file);
         PrologTextLoaderState state = env.getPrologTextLoaderState();
-	System.out.println("Aici");
+
         PrologTextLoader loader = new PrologTextLoader(state, (Term)null);
         //add
         state.addClause(loader, regula);
@@ -313,8 +313,8 @@ public class Main {
         }
 
         AtomTerm filePredicateTerm = AtomTerm.get("sunny");
-	AtomTerm filePredicateTermFirstArgument = AtomTerm.get("outside");
-	Term filePredicateSunnyTermArgs[] = new Term[]{filePredicateTermFirstArgument};
+	    AtomTerm filePredicateTermFirstArgument = AtomTerm.get("outside");
+	    Term filePredicateSunnyTermArgs[] = new Term[]{filePredicateTermFirstArgument};
         CompoundTerm fromFilePredicateTerm = new CompoundTerm(filePredicateTerm, filePredicateSunnyTermArgs);
         try {
             Goal filePredicateTermGoal = interpreter.prepareGoal(fromFilePredicateTerm);
